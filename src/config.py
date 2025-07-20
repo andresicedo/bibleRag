@@ -5,6 +5,8 @@ class Config:
     """Base configuration class."""
     APP_NAME = 'bibleRag'
     OPEN_AI_API_KEY = os.getenv('OPENAI_API_KEY', '')
+    OPEN_AI_MODEL = 'gpt-4o-2024-08-06'
+    OPEN_AI_EMBEDDING_MODEL = 'text-embedding-3-small'
     LOG_LOCATION = '/logs'
     BIBLE_VERSION = 'kjv'
 
@@ -30,3 +32,5 @@ def setup_config() -> Config:
     env_config = config_mapping.get(env, LocalConfig)
     env_config.ENV = env
     return env_config
+
+env_config = setup_config()
