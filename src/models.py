@@ -1,5 +1,5 @@
 from flask import Request, Response
-from pydantic import BaseModel, Field
+from pydantic import Field
 from typing import Any, Optional, Dict, List
 from werkzeug.datastructures import FileStorage
 from dataclasses import dataclass
@@ -48,11 +48,8 @@ class BibleRequest:
             data = request.form
             return cls(
                 version=data['version'],
-                files=request.get_list('files') if 'files' in data else []
+                files=request.files.getlist('files') if 'files' in request.files else []
             )
-
-        
-
     
 @dataclass
 class BibleResponse(Response):
@@ -75,3 +72,14 @@ class BibleResponse(Response):
     def not_found(status: str, message: str, code: int = 404) -> 'BibleResponse':
         """Create a not foudn response."""
         return {"status": status, "message": message}, code
+
+
+@dataclass
+class BibleMetadata:
+    """Represents metadata for a Bible document."""
+    book: Optional[str] = Field(None, description="Book of the Bible")
+    chapter: Optional[int] = Field(None, description="Chapter number")
+    verses: Optional[List[int]] = Field([], description="Verse numbers (optional for ranges)")
+    version: Optional[str] = Field(None, description="Bible version")
+    bible_page_number: Optional[int] = Field(None, description="Page number in the Bible document")
+    pdf_page_number: Optional[int] = Field(None, description="PDF page number where the text is located")

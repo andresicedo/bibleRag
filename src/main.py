@@ -12,10 +12,14 @@ def create_app() -> Flask:
     url_prefix = '/' + config.env_config.BIBLE_VERSION
 
     logger.setup(env_config.LOG_LOCATION)
-    LOG.INFO("Setting up Flask app with environment: %s", env_config.__name__)
+    LOG.info("Setting up Flask app with environment: %s", env_config.__name__)
 
     flask_app: Flask = Flask(__name__, static_url_path=url_prefix + '/static', static_folder='static')
     flask_app.config.from_object(env_config)
+
+    from src.routes.rag_routes import rag
+    LOG.info("Registering RAG routes with URL prefix: %s", url_prefix)
+    flask_app.register_blueprint(rag, url_prefix=url_prefix)
 
 
 

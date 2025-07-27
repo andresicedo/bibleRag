@@ -15,7 +15,7 @@ rag = Blueprint('rag', __name__)
 executor = concurrent.futures.ThreadPoolExecutor(max_workers=2)
 
 
-@rag.routes('initiate', methods=['POST'])
+@rag.route('initiate', methods=['POST'])
 def initiate_rag() -> BibleResponse:
     """Initiate a RAG process with the provided documents."""
     bible_request: BibleRequest = BibleRequest.from_request(request=request, qna=False)
@@ -46,7 +46,7 @@ def initiate_rag() -> BibleResponse:
         with executor:
             futures = [
                 executor.submit(store_embedded_bible_nodes_in_vector_db, processed_bible_nodes=chunked_bible_nodes, version=bible_request.version),
-                executor.submit(store_bible_nodes_in_document_db, processed_bible_nodes=raw_bible, version=bible_request.version)
+                executor.submit(store_bible_nodes_in_document_db, processed_bible_nodes=chunked_bible_nodes, version=bible_request.version)
             ]
             concurrent.futures.wait(futures)
         LOG.info("Storing stage for Bible version: %s COMPLETED", bible_request.version)

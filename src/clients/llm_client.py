@@ -1,4 +1,5 @@
 import logging
+from tenacity import retry, stop_after_attempt, wait_exponential
 from typing import Iterable, List
 from openai import OpenAI
 from openai.types import chat, CreateEmbeddingResponse
@@ -11,16 +12,16 @@ embedding_model: str = config.env_config.OPEN_AI_EMBEDDING_MODEL
 
 def initialize_openai_client() -> OpenAI:
     """Initialize the OpenAI client with the provided API key."""
+    LOG.info("Initializing OpenAI client")
     api_key: str = config.env_config.OPEN_AI_API_KEY
     return OpenAI(api_key=api_key)
 
 
-def get_text_embedding(text: str, metadata_context: str) -> CreateEmbeddingResponse:
+@retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=3))
+def get_text_embedding(text: str) -> CreateEmbeddingResponse:
     """Get embedding for the provided text using the OpenAI client.
         Response: CreateEmbeddingResponse with the List[float] embedding data located at response.data[0].embedding.
     """
-    LOG.info("Getting embeddings for document details: %s", metadata_context)
-
     response: CreateEmbeddingResponse = client.embeddings.create(
         model=embedding_model,
         input=text
