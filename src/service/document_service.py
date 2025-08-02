@@ -152,6 +152,6 @@ def tag_raw_document_with_metadata(raw_bible_page: RawDocument, prev_book: str =
     bible_page_metadata.version = BIBLE_VERSION
     bible_page_metadata.pdf_page_number = raw_bible_page.doc_id
 
-    raw_bible_page.metadata = bible_page_metadata.__dict__
+    raw_bible_page.metadata = bible_page_metadata.to_dict()
 
     LOG.debug(f"Tagged metadata for page {bible_page_metadata.pdf_page_number} SUCCESSFULLY")

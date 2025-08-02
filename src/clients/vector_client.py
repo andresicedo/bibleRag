@@ -22,7 +22,11 @@ def initiate_opensearch_vector_client() -> OpensearchVectorClient:
         http_auth=(OS_CREDS[0], OS_CREDS[1]),
         use_ssl=True,
         verify_certs=True,
-        ssl_show_warn=False
+        ssl_show_warn=False,
+        timeout=60,               # ← total timeout per request
+        max_retries=3,            # ← simple retry
+        retry_on_timeout=True,    # ← try again if timed out
+        connection_class=RequestsHttpConnection
     )
 
     return OpensearchVectorClient(os_client=client, dim=1536, index=INDEX, endpoint=OPENSEAERCH_ENDPOINT)

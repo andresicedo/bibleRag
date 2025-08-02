@@ -1,5 +1,5 @@
 from flask import Request, Response
-from pydantic import Field
+from pydantic import BaseModel, Field
 from typing import Any, Optional, Dict, List
 from werkzeug.datastructures import FileStorage
 from dataclasses import dataclass
@@ -74,12 +74,14 @@ class BibleResponse(Response):
         return {"status": status, "message": message}, code
 
 
-@dataclass
-class BibleMetadata:
-    """Represents metadata for a Bible document."""
+class BibleMetadata(BaseModel):
     book: Optional[str] = Field(None, description="Book of the Bible")
     chapter: Optional[int] = Field(None, description="Chapter number")
     verses: Optional[List[int]] = Field([], description="Verse numbers (optional for ranges)")
     version: Optional[str] = Field(None, description="Bible version")
     bible_page_number: Optional[int] = Field(None, description="Page number in the Bible document")
     pdf_page_number: Optional[int] = Field(None, description="PDF page number where the text is located")
+
+    def to_dict(self) -> Dict[str, Any]:
+        return self.model_dump(exclude_none=True)
+

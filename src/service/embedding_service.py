@@ -1,6 +1,7 @@
 import logging
 import concurrent.futures
 from typing import List
+from time import sleep
 from llama_index.core.schema import BaseNode, TextNode
 from llama_index.vector_stores.opensearch import OpensearchVectorStore
 from openai.types import CreateEmbeddingResponse
@@ -40,10 +41,20 @@ def store_embedded_bible_nodes_in_vector_db(processed_bible_nodes: List[BaseNode
     LOG.info(f"Storing {len(processed_bible_nodes)} embedded nodes for Bible version: {version}")
     vector_store: OpensearchVectorStore = get_opensearch_vector_store()
     node_ids = [node.node_id for node in processed_bible_nodes]
+
     try:
         vector_store.delete_nodes(node_ids=node_ids)
         LOG.info(f"Deleted existing nodes for Bible version: {version}")
-        vector_store.add()
+
+        batch_size = 100
+        for i in range(0, len(processed_bible_nodes), batch_size):
+            batch = processed_bible_nodes[i:i+batch_size]
+            try:
+                vector_store.add(nodes=batch)
+                LOG.info(f"Stored batch {i // batch_size + 1} ({len(batch)} nodes)")
+            except Exception as e:
+                LOG.error(f"Error storing batch {i // batch_size + 1}: {str(e)}")
+                sleep(2)  # gentle retry delay
         LOG.info(f"Stored {len(processed_bible_nodes)} embedded nodes for Bible version: {version}")
     except Exception as e:
         LOG.error(f"Error storing embedded nodes for Bible version {version}: {str(e)}")
