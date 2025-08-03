@@ -3,6 +3,7 @@ from typing import List, Tuple
 from llama_index.core.schema import BaseNode, TextNode
 
 LOG = logging.getLogger(__name__)
+LOG.info(f"Setting up SERVICE - {__name__}")
 
 
 def identify_ceiling_exceeding_nodes(nodes: List[TextNode], version: str) -> Tuple[List[TextNode], List[TextNode]]:

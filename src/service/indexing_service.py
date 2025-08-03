@@ -5,6 +5,7 @@ from src.models import RawDocument
 from llama_index.core.schema import BaseNode, TextNode
 
 LOG = logging.getLogger(__name__)
+LOG.info(f"Setting up SERVICE - {__name__}")
 
 
 def chunk_all_documents(raw_bible: List[RawDocument], version: str) -> List[BaseNode]:

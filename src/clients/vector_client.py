@@ -2,7 +2,6 @@ import logging
 from typing import List
 from opensearchpy import OpenSearch, RequestsHttpConnection
 from llama_index.vector_stores.opensearch import OpensearchVectorClient, OpensearchVectorStore
-from llama_index.core.schema import BaseNode
 from src import config
 
 

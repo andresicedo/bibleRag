@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Iterable, List, Optional
+from typing import Dict, Iterable, List
 from llama_index.vector_stores.opensearch import OpensearchVectorStore
 from llama_index.core.vector_stores.types import (
     MetadataFilter, MetadataFilters, FilterCondition, FilterOperator, 

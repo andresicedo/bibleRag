@@ -4,17 +4,19 @@ import pymupdf
 import os
 import time
 import re
-from typing import Dict, List
+from typing import List
 from werkzeug.datastructures import FileStorage
 from pathlib import Path
 from pymupdf import Document as pypdfDocument, Page as pypdfPage
 from pymongo import collection, database
 from llama_index.core.schema import TextNode
-from src.models import RawDocument, BibleRequest, BibleReference, BibleMetadata
+from src.models import RawDocument, BibleRequest, BibleMetadata
 from src import config
 from src.clients.mongo_client import get_bible_rag_db
 
 LOG = logging.getLogger(__name__)
+LOG.info(f"Setting up SERVICE - {__name__}")
+
 extensions: List[str] = ['.pdf']
 BIBLE_VERSION: str = config.env_config.BIBLE_VERSION
 

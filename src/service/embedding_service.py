@@ -2,7 +2,7 @@ import logging
 import concurrent.futures
 from typing import List
 from time import sleep
-from llama_index.core.schema import BaseNode, TextNode
+from llama_index.core.schema import BaseNode
 from llama_index.vector_stores.opensearch import OpensearchVectorStore
 from openai.types import CreateEmbeddingResponse
 from src.clients.llm_client import get_text_embedding
@@ -10,6 +10,7 @@ from src.clients.vector_client import get_opensearch_vector_store
 
 
 LOG = logging.getLogger(__name__)
+LOG.info(f"Setting up SERVICE - {__name__}")
 
 def embed_bible_nodes(processed_bible_nodes: List[BaseNode], version: str):
     """Embed Bible nodes for the specified version."""

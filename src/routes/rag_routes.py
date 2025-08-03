@@ -13,6 +13,7 @@ from src.service.embedding_service import embed_bible_nodes, store_embedded_bibl
 from src.service.retrieval_service import retrieve_top_k_query_results, generate_response_from_chunks
 
 LOG = logging.getLogger(__name__)
+LOG.info(f"Setting up ROUTES - {__name__}")
 
 rag = Blueprint('rag', __name__)
 executor = concurrent.futures.ThreadPoolExecutor(max_workers=2)

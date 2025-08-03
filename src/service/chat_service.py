@@ -9,6 +9,9 @@ from openai.types.chat import (
 from llama_index.storage.chat_store.mongo import MongoChatStore
 from src.clients.mongo_client import get_mongo_chat_store
 
+LOG = logging.getLogger(__name__)
+LOG.info(f"Setting up service - {__name__}")
+
 
 def get_chat_history(session_id: str) -> List[ChatMessage]:
     mongo_chat_store: MongoChatStore = get_mongo_chat_store()
