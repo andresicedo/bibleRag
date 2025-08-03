@@ -23,9 +23,9 @@ def initiate_opensearch_vector_client() -> OpensearchVectorClient:
         use_ssl=True,
         verify_certs=True,
         ssl_show_warn=False,
-        timeout=60,               # ← total timeout per request
-        max_retries=3,            # ← simple retry
-        retry_on_timeout=True,    # ← try again if timed out
+        timeout=60,
+        max_retries=3, 
+        retry_on_timeout=True,  
         connection_class=RequestsHttpConnection
     )
 

@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 from typing import Any, Optional, Dict, List
 from werkzeug.datastructures import FileStorage
 from dataclasses import dataclass
+from enum import Enum
 
 @dataclass
 class RawDocument:
@@ -16,10 +17,9 @@ class RawDocument:
 class BibleReference:
     """Represents a reference to a Bible verse or passage."""
     book: str = Field(..., description="Book of the Bible")
-    chapter: int = Field(..., description="Chapter number")
+    chapter: Optional[int] = Field(..., description="Chapter number")
     verse: Optional[int] = Field(None, description="Verse number (optional for ranges)")
     end_verse: Optional[int] = Field(None, description="End verse number (for ranges)")
-
 
 
 @dataclass
@@ -85,3 +85,32 @@ class BibleMetadata(BaseModel):
     def to_dict(self) -> Dict[str, Any]:
         return self.model_dump(exclude_none=True)
 
+
+class Prompt(BaseModel):
+    version: Optional[str] = Field(None, description="Bible version")
+    role: Optional[str] = Field(None, description="Role of prompt message being passed to an LLM")
+    value: Optional[object] = Field(None, description="Prompt message")
+
+    def to_dict(self) -> Dict[str, Any]:
+        return self.model_dump(exclude_none=True)
+    
+    @classmethod
+    def from_request(cls, request: Request) -> 'List[Prompt]':
+        payload_list: List[Prompt]= []
+        json = request.get_json()
+        data = json['prompts']
+        for prompt in data:
+            prompt["version"] = json["version"]
+            payload_list.append(
+                Prompt(**prompt)
+            )
+        return payload_list
+       
+
+class PromptEnum(Enum):
+    SYSTEM_PROMPT: str = "SYSTEM_PROMPT"
+    ROLE_PROMPT: str = "ROLE_PROMPT"
+
+    @classmethod
+    def list(cls) -> List[str]:
+        return [prompt.value for prompt in cls]

@@ -1,13 +1,16 @@
 import logging
 import concurrent.futures
+import uuid
 from flask import Blueprint, request
 from typing import Dict, List
 from llama_index.core.schema import BaseNode, TextNode
+from llama_index.core.vector_stores.types import VectorStoreQueryResult
 from src.models import RawDocument, BibleRequest, BibleResponse
 from src.service.document_service import process_documents, store_bible_nodes_in_document_db
 from src.service.indexing_service import chunk_all_documents
 from src.service.postprocessing_service import identify_ceiling_exceeding_nodes, chunk_ceiling_exceeding_nodes
 from src.service.embedding_service import embed_bible_nodes, store_embedded_bible_nodes_in_vector_db
+from src.service.retrieval_service import retrieve_top_k_query_results, generate_response_from_chunks
 
 LOG = logging.getLogger(__name__)
 
@@ -61,17 +64,35 @@ def initiate_rag() -> BibleResponse:
 def query_rag() -> BibleResponse:
     """Query the RAG system with a Bible request."""
     try:
-        bible_request = BibleRequest.from_request(request)
-        
+        bible_request = BibleRequest.from_request(request=request, qna=True)
         LOG.info("Processing RAG query for version: %s", bible_request.version)
         
-        response_data = {
-            "version": bible_request.version,
-            "query": bible_request.query,
-            "results": [] 
-        }
+        if bible_request.session_id is None:
+            bible_request.session_id = str(uuid.uuid4())
+
+        top_k_results: VectorStoreQueryResult = retrieve_top_k_query_results(request=bible_request)
+        if not top_k_results:
+            return BibleResponse.not_found(
+                status="FAILED",
+                message=f"No relevant scripture found for {bible_request.query}"
+            )
+        LOG.info(f"Retrieval stage for bible version: {bible_request.version} COMPLETED")
+
+        response_text: str = generate_response_from_chunks(
+            bible_request=bible_request, chunks=top_k_results.nodes
+        )
+
+        if not response_text:
+            return BibleResponse.failure(
+                status="FAILURE",
+                message=f"Failed to retrieve a response for the question: {bible_request.query}"
+            )
         
-        return BibleResponse.success("success", "RAG query processed", data=response_data, session_id=bible_request.session_id)
+        return BibleResponse.success(
+            status="SUCCESS", 
+            message="RAG query processed", 
+            data=response_text, 
+            session_id=bible_request.session_id)
     except Exception as e:
         LOG.error("Error processing RAG query: %s", str(e))
         return BibleResponse.failure("error", "Failed to process RAG query")

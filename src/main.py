@@ -21,6 +21,8 @@ def create_app() -> Flask:
     LOG.info("Registering RAG routes with URL prefix: %s", url_prefix)
     flask_app.register_blueprint(rag, url_prefix=url_prefix)
 
-
+    from src.routes.prompting_routes import prompting
+    LOG.info("Registering PROMPT routes with URL prefix %s", url_prefix)
+    flask_app.register_blueprint(prompting, url_prefix=url_prefix)
 
     return flask_app
