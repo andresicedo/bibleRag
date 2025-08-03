@@ -24,7 +24,8 @@ def get_text_embedding(text: str) -> CreateEmbeddingResponse:
     """
     response: CreateEmbeddingResponse = client.embeddings.create(
         model=embedding_model,
-        input=text
+        input=text,
+        dimensions=1536
     )
     return response
 

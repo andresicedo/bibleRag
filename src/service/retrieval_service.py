@@ -1,5 +1,4 @@
 import logging
-import json
 from typing import Dict, Iterable, List, Optional
 from llama_index.vector_stores.opensearch import OpensearchVectorStore
 from llama_index.core.vector_stores.types import (
@@ -26,12 +25,12 @@ def retrieve_top_k_query_results(bible_request: BibleRequest) -> VectorStoreQuer
         raise ValueError("Query and version must be provided.")
     
     # embed the query
-    query_embedding = get_text_embedding(text=bible_request.query)
+    query_embedding = get_text_embedding(text=bible_request.query).data[0].embedding
 
     # get the opensearch vector store
     os_vector_store: OpensearchVectorStore = get_opensearch_vector_store()
 
-    max_top_k: int = 10 # can be logic based in future enhancement
+    max_top_k: int = 20 # can be logic based in future enhancement
 
     # perform the search
     vector_store_query: VectorStoreQuery = VectorStoreQuery(
@@ -47,9 +46,9 @@ def get_open_search_metadata_filters(bible_references: List[BibleReference]) -> 
 
     filters = [
         MetadataFilter(
-            key="book.keyword",
+            key="book",
             value=bible_reference.book,
-            operator=FilterOperator.CONTAINS
+            operator=FilterOperator.EQ
         )
         for bible_reference in bible_references
     ]
@@ -62,8 +61,8 @@ def get_open_search_metadata_filters(bible_references: List[BibleReference]) -> 
 
 def generate_response_from_chunks(bible_request: BibleRequest, chunks: List[BaseNode]) -> str:
     prompts: Dict[str, Dict] = get_prompts(version=bible_request.version)
-    role_context: str = prompts.get("ROLE_CONTEXT", None).value if prompts else None
-    system_context: str = prompts.get("SYSTEM_CONTEXT", None).value if prompts else None
+    role_context: str = prompts.get("ROLE_PROMPT", None)["value"] if prompts else None
+    system_context: str = prompts.get("SYSTEM_PROMPT", None)["value"] if prompts else None
     query_context = "/n---/n".join([chunk.get_content() for chunk in chunks])
 
     chat_messages: List[ChatMessage] = []

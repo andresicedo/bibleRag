@@ -2,7 +2,7 @@ import logging
 import concurrent.futures
 import uuid
 from flask import Blueprint, request
-from typing import Dict, List
+from typing import List
 from llama_index.core.schema import BaseNode, TextNode
 from llama_index.core.vector_stores.types import VectorStoreQueryResult
 from src.models import RawDocument, BibleRequest, BibleResponse
@@ -70,7 +70,7 @@ def query_rag() -> BibleResponse:
         if bible_request.session_id is None:
             bible_request.session_id = str(uuid.uuid4())
 
-        top_k_results: VectorStoreQueryResult = retrieve_top_k_query_results(request=bible_request)
+        top_k_results: VectorStoreQueryResult = retrieve_top_k_query_results(bible_request=bible_request)
         if not top_k_results:
             return BibleResponse.not_found(
                 status="FAILED",
@@ -95,4 +95,4 @@ def query_rag() -> BibleResponse:
             session_id=bible_request.session_id)
     except Exception as e:
         LOG.error("Error processing RAG query: %s", str(e))
-        return BibleResponse.failure("error", "Failed to process RAG query")
+        return BibleResponse.failure("error", "Failed to process Bible query")

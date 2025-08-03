@@ -1,7 +1,7 @@
 import logging
-from typing import Dict, List
+from typing import Dict
 from flask import Blueprint, request
-from src.models import BibleResponse, Prompt, PromptEnum
+from src.models import BibleResponse, Prompt
 from src.service.prompting_service import store_prompts, get_prompts
 
 LOG = logging.getLogger(__name__)

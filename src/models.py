@@ -12,8 +12,7 @@ class RawDocument:
     doc_data: str = Field(..., description="Content of the document")
     metadata: Dict[str, Any] = Field(default_factory=dict, description="Metadata associated with the document")
 
-
-@dataclass 
+@dataclass
 class BibleReference:
     """Represents a reference to a Bible verse or passage."""
     book: str = Field(..., description="Book of the Bible")
@@ -30,7 +29,7 @@ class BibleRequest:
     bible_references: Optional[List[BibleReference]] = Field(None, description="List of Bible references")
     files: Optional[List[FileStorage]] = Field(None, description="List of files to be processed")
     qna: bool = Field(False, description="Flag to indicate if the request is for a Q&A process")
-    session_id: Optional[str] = Field(None, description="Session ID for tracking the request")
+    session_id: Optional[str] = Field(..., description="Session ID for tracking the request")
 
     @classmethod
     def from_request(cls, request: Request, qna: bool) -> 'BibleRequest':
@@ -38,12 +37,13 @@ class BibleRequest:
         if qna:
             data = request.get_json()
             return cls(
-            version=data['version'],
-            query=data['query'],
-            bible_references=[
-                BibleReference(**ref) for ref in data.get('bible_references', [])
-            ],
-            session_id=data['session_id'])
+                version=data['version'],
+                query=data['query'],
+                bible_references=[
+                    BibleReference(**ref) for ref in data.get('bible_references', [])
+                ],
+                session_id=data.get('session_id', None)
+            )
         else: 
             data = request.form
             return cls(
