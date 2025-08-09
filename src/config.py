@@ -4,16 +4,18 @@ import os
 class Config:
     """Base configuration class."""
     APP_NAME = 'bibleRag'
-    DB_NAME = "bible-rag"
+    DB_NAME = ""
     LOG_LOCATION = 'src/logs'
-    BIBLE_VERSION = 'kjv'
+    BIBLE_VERSION = ''
     OPEN_AI_API_KEY = ''
-    OPEN_AI_MODEL = 'gpt-4o-2024-08-06'
-    OPEN_AI_EMBEDDING_MODEL = 'text-embedding-3-small'
+    OPEN_AI_MODEL = ''
+    OPEN_AI_EMBEDDING_MODEL = ''
     MONGO_CERT_PATH = ""
+    MONGO_CHAT_COLLECTION = "chats"
+    MONGO_PROMPT_COLLECTION = "prompts"
     MONGO_URI = ""
     OS_ENDPOINT = ""
-    OS_CREDS = ['admin', 'admin']
+    OS_CREDS = ['', '']
 
 
 class LocalConfig(Config):
