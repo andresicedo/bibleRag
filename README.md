@@ -39,9 +39,9 @@ The system uses modern natural language processing techniques to retrieve contex
 **Response Payload:**
 ```json
 {
-    "data": "The field referenced as the \"field of blood\" is called \"Aceldama.\" This is noted in Acts 1:19: \"And it was known unto all the dwellers at Jerusalem; insomuch as that field is called in their proper tongue, Aceldama, that is to say, The field of blood.\"",
+    "data": "The Bible speaks extensively on the topic of forgiveness, emphasizing its importance in several passages. In Matthew 18:21-22, Peter asks Jesus how often he should forgive his brother, to which Jesus responds, \"I say not unto thee, Until seven times: but, Until seventy times seven.\" This teaching underscores the boundless nature of forgiveness expected from believers.\n\nAdditionally, Jesus illustrates forgiveness through a parable later in the same chapter (Matthew 18:23-35), where a king forgives a servant's immense debt, yet that servant refuses to forgive a fellow servant a much smaller debt. This parable concludes with a sobering reminder from Jesus: \"So likewise shall my heavenly Father do also unto you, if ye from your hearts forgive not every one his brother their trespasses\" (Matthew 18:35).\n\nFurthermore, during the Sermon on the Mount, Jesus instructs believers on the importance of reconciliation and forgiveness. He says, \"If thou bring thy gift to the altar, and there rememberest that thy brother hath ought against thee; Leave there thy gift before the altar, and go thy way; first be reconciled to thy brother, and then come and offer thy gift\" (Matthew 5:23-24). This emphasizes that reconciliation with others is crucial and takes precedence even over offering gifts to God.\n\nThese passages reflect the centrality of forgiveness in Christian teachings, portraying it as an essential quality for followers of Christ.",
     "message": "RAG query processed",
-    "session_id": "83402842-36cf-4a68-af24-31b4aba13144",
+    "session_id": "2ace4b43-d332-4818-8732-35faf8e5d93d",
     "status": "SUCCESS"
 }
 ```
