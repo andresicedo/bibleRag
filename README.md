@@ -13,6 +13,7 @@ The system uses modern natural language processing techniques to retrieve contex
 - **OpenAI GPT-4o (2024-08-06)** – LLM for generating QnA responses
 - **OpenAI text-embedding-3-small** – Embedding model for vectorizing text chunks
 - **PDF Processing Tools** – Extract and preprocess text from the KJV Bible PDF
+- **KJV Bible by the Church of England** - https://www.ccel.org/ccel/b/bible/kjv/cache/kjv.pdf 
 
 ---
 
